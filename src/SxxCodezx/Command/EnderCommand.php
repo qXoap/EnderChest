@@ -23,17 +23,31 @@ class EnderCommand extends Command {
     public function execute(CommandSender $sender, string $commandLabel, array $args)
     {
         if($sender instanceof Player){
-            $name = $sender->getName();
-            $ender = InvMenu::create(InvMenuTypeIds::TYPE_CHEST);
-            $ender->setName($name." §5EnderChest");
-            $inv = $ender->getInventory();
-            $inv->setContents($sender->getEnderInventory()->getContents());
-            $ender->setListener(function (InvMenuTransaction $transaction) use ($sender): InvMenuTransactionResult{
-            $sender->getEnderInventory()->setItem($transaction->getAction()->getSlot(), $transaction->getIn());
-            return $transaction->continue();
-            });
-            $ender->send($sender);
-            Sounds::addSound($sender, 'random.enderchestopen', 50 ,1);
+            if($sender->hasPermission("enderchest.cmd")){
+                $name = $sender->getName();
+                $ender = InvMenu::create(InvMenuTypeIds::TYPE_CHEST);
+                $ender->setName($name." §5EnderChest");
+                $inv = $ender->getInventory();
+                $inv->setContents($sender->getEnderInventory()->getContents());
+                $ender->setListener(function (InvMenuTransaction $transaction) use ($sender): InvMenuTransactionResult{
+                $sender->getEnderInventory()->setItem($transaction->getAction()->getSlot(), $transaction->getIn());
+                return $transaction->continue();
+                });
+                $ender->send($sender);
+                Sounds::addSound($sender, 'random.enderchestopen', 50 ,1);
+            }else{
+                $name = $sender->getName();
+                $ender = InvMenu::create(InvMenuTypeIds::TYPE_HOPPER);
+                $ender->setName($name." §5EnderChest");
+                $inv = $ender->getInventory();
+                $inv->setContents($sender->getEnderInventory()->getContents());
+                $ender->setListener(function (InvMenuTransaction $transaction) use ($sender): InvMenuTransactionResult{
+                $sender->getEnderInventory()->setItem($transaction->getAction()->getSlot(), $transaction->getIn());
+                return $transaction->continue();
+                });
+                $ender->send($sender);
+                Sounds::addSound($sender, 'random.enderchestopen', 50 ,1);
+            }
         }else{
         }
     }
